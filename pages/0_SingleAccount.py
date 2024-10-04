@@ -105,4 +105,9 @@ def main():
     st.dataframe(df_main)
 
 if __name__ == '__main__':
-    main()
+    if "password_correct" not in st.session_state:
+        st.session_state["password_correct"] = False
+    if not st.session_state["password_correct"]:
+        st.warning("😕 Please input Password in Home page")
+    else:
+        main()

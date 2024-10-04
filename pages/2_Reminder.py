@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import os
 
+st.set_page_config(page_title="Reminder", layout="wide")
+
 def load_data():
     product = pd.read_csv('data/product.csv', encoding='utf-8')
     account = pd.read_csv('data/account.csv', encoding='utf-8')
@@ -73,5 +75,10 @@ def main():
         st.success("目前没有需要特别注意的产品。")
 
 if __name__ == "__main__":
-    main()
+    if "password_correct" not in st.session_state:
+        st.session_state["password_correct"] = False
+    if not st.session_state["password_correct"]:
+        st.warning("😕 Please input Password in Home page")
+    else:
+        main()
 

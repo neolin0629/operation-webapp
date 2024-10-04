@@ -3,8 +3,17 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import streamlit as st
+import hmac
 
 st.set_page_config(layout="wide")
+
+# 用户输入的处理
+def password_entered():
+    if hmac.compare_digest(st.session_state["password"], st.secrets["password"]):
+        st.session_state["password_correct"] = True
+        del st.session_state["password"]  # 不再存储密码
+    else:
+        st.session_state["password_correct"] = False
 
 # 读取CSV文件
 @st.cache_data
@@ -172,4 +181,13 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    if "password_correct" not in st.session_state:
+        st.session_state["password_correct"] = False
+
+    if not st.session_state["password_correct"]:
+        # 显示密码输入框
+        st.text_input("Password", type="password", on_change=password_entered, key="password")
+        if "password_correct" in st.session_state and not st.session_state["password_correct"]:
+            st.warning("😕 Check Password")
+    else:
+        main()
